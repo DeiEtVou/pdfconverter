@@ -12,23 +12,23 @@ const textInput = document.getElementById('textInput');
 const addTextBtn = document.getElementById('addTextBtn');
 const contentList = document.getElementById('contentList');
 
-let contentItems = []; // Array to store both text and images in order
+let contentItems = []; 
 
-// Click to upload
+
 uploadArea.addEventListener('click', () => fileInput.click());
 
-// Drag over effect
+
 uploadArea.addEventListener('dragover', (e) => {
     e.preventDefault();
     uploadArea.classList.add('dragover');
 });
 
-// Drag leave effect
+
 uploadArea.addEventListener('dragleave', () => {
     uploadArea.classList.remove('dragover');
 });
 
-// Drop files
+
 uploadArea.addEventListener('drop', (e) => {
     e.preventDefault();
     uploadArea.classList.remove('dragover');
@@ -36,12 +36,12 @@ uploadArea.addEventListener('drop', (e) => {
     handleFiles(files);
 });
 
-// File input change
+
 fileInput.addEventListener('change', (e) => {
     handleFiles(Array.from(e.target.files));
 });
 
-// Handle uploaded files
+
 function handleFiles(files) {
     files.forEach(file => {
         const reader = new FileReader();
@@ -59,7 +59,7 @@ function handleFiles(files) {
     });
 }
 
-// Add text block
+
 addTextBtn.addEventListener('click', () => {
     const text = textInput.value.trim();
     if (text) {
@@ -74,7 +74,7 @@ addTextBtn.addEventListener('click', () => {
     }
 });
 
-// Update content list display
+
 function updateContentList() {
     contentList.innerHTML = '';
     
@@ -111,7 +111,7 @@ function updateContentList() {
     });
 }
 
-// Remove content item
+
 window.removeContent = function(index) {
     contentItems.splice(index, 1);
     updateContentList();
@@ -119,7 +119,7 @@ window.removeContent = function(index) {
     updateImageCount();
 };
 
-// Move content item up or down
+
 window.moveContent = function(index, direction) {
     const newIndex = index + direction;
     if (newIndex >= 0 && newIndex < contentItems.length) {
@@ -128,14 +128,13 @@ window.moveContent = function(index, direction) {
     }
 };
 
-// Update button states
+
 function updateButtons() {
     const hasContent = contentItems.length > 0;
     convertBtn.disabled = !hasContent;
     clearBtn.disabled = !hasContent;
 }
 
-// Update image count display
 function updateImageCount() {
     const imageCountNum = contentItems.filter(item => item.type === 'image').length;
     const textCount = contentItems.filter(item => item.type === 'text').length;
@@ -151,7 +150,7 @@ function updateImageCount() {
     }
 }
 
-// Clear all content
+
 clearBtn.addEventListener('click', () => {
     contentItems = [];
     updateContentList();
@@ -163,7 +162,7 @@ clearBtn.addEventListener('click', () => {
     }, 2000);
 });
 
-// Convert to PDF with copyable text
+
 convertBtn.addEventListener('click', async () => {
     if (contentItems.length === 0) return;
 
@@ -192,14 +191,14 @@ convertBtn.addEventListener('click', async () => {
             const item = contentItems[i];
             
             if (item.type === 'text') {
-                // Add text as actual selectable text
+           
                 pdf.setFontSize(12);
                 pdf.setTextColor(0, 0, 0);
                 
                 const lines = pdf.splitTextToSize(item.content, usableWidth);
-                const textHeight = lines.length * 7; // Approximate height
+                const textHeight = lines.length * 7; 
                 
-                // Check if we need a new page
+                
                 if (currentY + textHeight > pageHeight - margin && !isFirstPage) {
                     pdf.addPage();
                     currentY = margin;
@@ -210,7 +209,7 @@ convertBtn.addEventListener('click', async () => {
                 isFirstPage = false;
                 
             } else if (item.type === 'image') {
-                // Add image
+           
                 const img = new Image();
                 img.src = item.data;
                 
@@ -220,13 +219,13 @@ convertBtn.addEventListener('click', async () => {
                         let imgWidth = usableWidth;
                         let imgHeight = imgWidth / imgRatio;
                         
-                        // Scale down if too tall
+                  
                         if (imgHeight > pageHeight - (2 * margin)) {
                             imgHeight = pageHeight - (2 * margin);
                             imgWidth = imgHeight * imgRatio;
                         }
                         
-                        // Check if we need a new page
+                
                         if (currentY + imgHeight > pageHeight - margin && !isFirstPage) {
                             pdf.addPage();
                             currentY = margin;
